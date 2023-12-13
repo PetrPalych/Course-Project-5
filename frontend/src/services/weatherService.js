@@ -92,6 +92,14 @@ const formatToLocalTime = (
 const iconUrlFromCode = (code) =>
   `http://openweathermap.org/img/wn/${code}@2x.png`;
 
+const kelvinToCelsius = (kelvin) => {
+  if (typeof kelvin != "number" || isNaN(kelvin)) {
+    return "It's not a number";
+  }
+  const celsius = kelvin - 273.15;
+  return celsius;
+};
+
 export default getFormattedWeatherData;
 
-export { formatToLocalTime, iconUrlFromCode };
+export { formatToLocalTime, iconUrlFromCode, kelvinToCelsius };
