@@ -5,7 +5,9 @@ import Inputs from "./components/Inputs";
 import TimeAndLocation from "./components/TimeAndLocation";
 import TemperatureAndDetails from "./components/TemperatureAndDetails";
 import Forecast from "./components/Forecast";
-import getFormattedWeatherData from "./services/weatherService";
+import getFormattedWeatherData, {
+  kelvinToCelsius,
+} from "./services/weatherService";
 
 const App = () => {
   const [query, setQuery] = useState({ q: "osh" });
@@ -20,8 +22,18 @@ const App = () => {
     };
     fetchWeather();
   }, [query, units]);
+  console.log(weather);
+  const formatBackground = () => {
+    if (!weather) return "from-cyan-700 to-blue-700";
+    const threshold = units === "metric" ? 20 : 60;
+    if (kelvinToCelsius(weather.temp) < threshold)
+      return "from-cyan-700 to-blue-700";
+    return "from-yellow-700 to-orange-700";
+  };
   return (
-    <div className="mx-auto max-w-screen-md mt-4 py-5 px-28 bg-gradient-to-br from-cyan-700 to-blue-700 h-fit shadow-xl shadow-gray-400">
+    <div
+      className={`mx-auto max-w-screen-md mt-12 py-10 px-28 bg-gradient-to-br from-cyan-700 to-blue-700 h-fit shadow-xl shadow-gray-400 ${formatBackground()}`}
+    >
       <TopButtons setQuery={setQuery} />
       <Inputs setQuery={setQuery} units={units} setUnits={setUnits} />
       {weather && (
