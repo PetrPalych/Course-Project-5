@@ -3,7 +3,6 @@ import { UilSearch, UilLocationPoint } from "@iconscout/react-unicons";
 
 const Inputs = ({ setQuery, units, setUnits }) => {
   const [city, setCity] = useState("");
-  const [unitName, setUnitName] = useState("");
   const handleSearchClick = () => {
     if (city !== "") {
       setQuery({ q: city });
@@ -23,12 +22,6 @@ const Inputs = ({ setQuery, units, setUnits }) => {
       });
     }
   };
-
-  // const handleUnitsChange = (e) => {
-  //   // const selectedUnit = ;
-  //   setUnitName(e.currentTarget.name);
-  //   if (units !== unitName) setUnits(unitName);
-  // };
 
   return (
     <div className="flex flex-row justify-center my-6">
@@ -50,27 +43,6 @@ const Inputs = ({ setQuery, units, setUnits }) => {
           className="text-white cursor-pointer transition ease-out hover:scale-125"
           onClick={handleLocationClick}
         />
-      </div>
-      <div className="flex flex-row w-1/4 items-center justify-center">
-        {/* <button
-          name="metric"
-          className={`text-2xl text-white font-light transition ease-out hover:scale-125 ${
-            unitName === "metric" ? "text-black" : ""
-          }`}
-          onClick={handleUnitsChange}
-        >
-          °C
-        </button> */}
-        {/* <p className="text-white mx-1 text-2xl px-3">|</p>
-        <button
-          name="imperial"
-          className={`text-2xl text-white font-light transition ease-out hover:scale-125 ${
-            unitName === "imperial" ? "text-black" : ""
-          }`}
-          onClick={handleUnitsChange}
-        >
-          °F
-        </button> */}
       </div>
     </div>
   );
