@@ -1,11 +1,15 @@
 # Test your FastAPI endpoints
 
-GET http://127.0.0.1:8000/
-Accept: application/json
+
+# Send a GET request to the specific weather forecast endpoint
+GET http://localhost:8000/api/v1/temperature/2023/12/22/10
 
 ###
 
-GET http://127.0.0.1:8000/hello/User
-Accept: application/json
+# Send a GET request to the next five hours weather forecast endpoint
+GET http://localhost:8000/api/v1/temperature/hourly-forecast
 
 ###
+
+# Send a GET request to the next five days weather forecast endpoint
+GET http://localhost:8000/api/v1/temperature/daily-forecast
