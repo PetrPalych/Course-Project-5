@@ -1,7 +1,9 @@
 import { DateTime } from "luxon";
+import { format } from "date-fns";
 
 const API_KEY = "25f851fcd1ea106d2cf5b44c87143287";
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
+const BASEL_BASE_URL = "";
 
 const getWeatherData = (infoType, searchParams) => {
   const url = new URL(BASE_URL + "/" + infoType);
@@ -100,6 +102,36 @@ const kelvinToCelsius = (kelvin) => {
   return celsius;
 };
 
+const getCurrentDate = () => {
+  const now = new Date();
+  const formattedDate = format(now, "yyyy/MM/dd/HH");
+  console.log(formattedDate);
+  return formattedDate;
+};
+
+const fetchBaselData = (cuurentDate) => {
+  try {
+    const api = `?/${cuurentDate}`;
+    console.log(api);
+    // const response = fetch(BASEL_BASE_URL + "?/" + cuurentDate, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    // });
+    // const result = response.json();
+    // return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default getFormattedWeatherData;
 
-export { formatToLocalTime, iconUrlFromCode, kelvinToCelsius };
+export {
+  formatToLocalTime,
+  iconUrlFromCode,
+  kelvinToCelsius,
+  getCurrentDate,
+  fetchBaselData,
+};

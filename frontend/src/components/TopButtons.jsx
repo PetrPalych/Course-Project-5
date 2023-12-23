@@ -1,6 +1,7 @@
 import React from "react";
+import { getCurrentDate } from "../services/weatherService";
 
-const TopButtons = ({ setQuery }) => {
+const TopButtons = ({ setQuery, setBaselQuery }) => {
   const cities = [
     {
       id: 1,
@@ -28,12 +29,18 @@ const TopButtons = ({ setQuery }) => {
       {cities.map((city) => (
         <button
           key={city.id}
-          className="text-white text-lg font-medium"
+          className="text-white  text-lg font-medium"
           onClick={() => setQuery({ q: city.title })}
         >
           {city.title}
         </button>
       ))}
+      <button
+        onClick={() => setBaselQuery(getCurrentDate())}
+        className="text-white text-lg font-medium underline"
+      >
+        Basel
+      </button>
     </div>
   );
 };
