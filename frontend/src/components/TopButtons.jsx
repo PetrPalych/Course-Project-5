@@ -24,6 +24,7 @@ const TopButtons = ({ setQuery, setBaselQuery }) => {
       title: "Moscow",
     },
   ];
+
   return (
     <div className="flex items-center justify-around my-6">
       {cities.map((city) => (
@@ -36,7 +37,7 @@ const TopButtons = ({ setQuery, setBaselQuery }) => {
         </button>
       ))}
       <button
-        onClick={() => setBaselQuery(getCurrentDate())}
+        onClick={() => setBaselQuery(true)}
         className="text-white text-lg font-medium underline"
       >
         Basel

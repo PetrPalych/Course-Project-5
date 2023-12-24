@@ -6,34 +6,62 @@ import TimeAndLocation from "./components/TimeAndLocation";
 import TemperatureAndDetails from "./components/TemperatureAndDetails";
 import Forecast from "./components/Forecast";
 import getFormattedWeatherData, {
-  fetchBaselData,
   kelvinToCelsius,
+  fetchBaselWeather,
 } from "./services/weatherService";
+import BaselTimeAndLocation from "./components/Basel/BaselTimeAndLocation";
+import BaselTemperature from "./components/Basel/BaselTemperature";
+import BaselForecast from "./components/Basel/BaselForecast";
 
 const App = () => {
   const [query, setQuery] = useState({ q: "osh" });
-  const [baselQuery, setBaselQuery] = useState("");
+  const [baselQuery, setBaselQuery] = useState(false);
   const [units, setUnits] = useState("metric");
   const [weather, setWeather] = useState(null);
+  const [baselWeather, setBaselWeather] = useState(null);
+  const [moreBaselDetails, setMoreBaselDetails] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  console.log(baselWeather);
+  console.log(moreBaselDetails);
 
   useEffect(() => {
+    setBaselQuery(false);
     const fetchWeather = async () => {
-      await getFormattedWeatherData({ ...query, ...units }).then((data) => {
-        setWeather(data);
-      });
+      setIsLoading(true);
+
+      await getFormattedWeatherData({ ...query, ...units })
+        .then((data) => {
+          setWeather(data);
+        })
+        .then(() => setBaselWeather(null));
+      setIsLoading(false);
     };
 
     fetchWeather();
   }, [query, units]);
 
   useEffect(() => {
-    const fetchBaselWeather = async () => {
-      const res = await fetchBaselData(baselQuery);
-    };
-    fetchBaselWeather();
+    if (baselQuery) {
+      const fetchBasel = async () => {
+        setIsLoading(true);
+
+        await getFormattedWeatherData({ q: "basel", ...units }).then((data) => {
+          setBaselWeather({ moreDetails: data });
+        });
+
+        await fetchBaselWeather()
+          .then((res) =>
+            setBaselWeather((prevValue) => ({ ...prevValue, ...res }))
+          )
+          .then(() => setWeather(null));
+
+        setIsLoading(false);
+      };
+      fetchBasel();
+    }
   }, [baselQuery]);
 
-  console.log(weather);
   const formatBackground = () => {
     if (!weather) return "from-cyan-700 to-blue-700";
     const threshold = units === "metric" ? 20 : 60;
@@ -47,13 +75,36 @@ const App = () => {
     >
       <TopButtons setQuery={setQuery} setBaselQuery={setBaselQuery} />
       <Inputs setQuery={setQuery} units={units} setUnits={setUnits} />
-      {weather && (
-        <div>
-          <TimeAndLocation weather={weather} />
-          <TemperatureAndDetails weather={weather} />
-          <Forecast title="hourly forecast" items={weather.hourly} />
-          <Forecast title="daily forecast" items={weather.daily} />
-        </div>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          {weather && (
+            <div>
+              <TimeAndLocation weather={weather} />
+              <TemperatureAndDetails weather={weather} />
+              <Forecast title="hourly forecast" items={weather.hourly} />
+              <Forecast title="daily forecast" items={weather.daily} />
+            </div>
+          )}
+
+          {baselWeather && (
+            <div>
+              <BaselTimeAndLocation />
+              <BaselTemperature baselWeather={baselWeather} />
+              <BaselForecast
+                title="hourly forecast"
+                items={baselWeather.hourlyForecast}
+                moreDetails={baselWeather.moreDetails}
+              />
+              <BaselForecast
+                title="daily forecast"
+                items={baselWeather.dailyForecast}
+                moreDetails={baselWeather.moreDetails}
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );
