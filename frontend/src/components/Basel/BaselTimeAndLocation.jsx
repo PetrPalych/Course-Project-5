@@ -14,7 +14,7 @@ const BaselTimeAndLocation = () => {
         year: "numeric",
         hour: "numeric",
         minute: "numeric",
-        hour12: true,
+        hour12: false,
         timeZone: "Europe/Zurich",
       };
 

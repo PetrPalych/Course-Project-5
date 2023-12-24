@@ -23,7 +23,6 @@ const BaselForecast = ({ title, items, moreDetails }) => {
     };
   });
 
-  console.log(combinedArray);
   return (
     <div>
       <div className="flex items-center justify-start mt-6">

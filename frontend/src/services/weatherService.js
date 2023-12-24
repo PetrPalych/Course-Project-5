@@ -105,7 +105,6 @@ const kelvinToCelsius = (kelvin) => {
 const getCurrentDate = () => {
   const now = new Date();
   const formattedDate = format(now, "yyyy/MM/dd/HH");
-  console.log(formattedDate);
   return formattedDate;
 };
 
@@ -131,7 +130,6 @@ const fetchBaselTemperatureData = async () => {
       },
     });
     const result = response.json();
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);

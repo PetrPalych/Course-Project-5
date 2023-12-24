@@ -12,34 +12,34 @@ import getFormattedWeatherData, {
 import BaselTimeAndLocation from "./components/Basel/BaselTimeAndLocation";
 import BaselTemperature from "./components/Basel/BaselTemperature";
 import BaselForecast from "./components/Basel/BaselForecast";
+import Loader from "./components/Loader/Loader";
 
 const App = () => {
-  const [query, setQuery] = useState({ q: "osh" });
-  const [baselQuery, setBaselQuery] = useState(false);
+  const [query, setQuery] = useState({ q: "" });
+  const [baselQuery, setBaselQuery] = useState(true);
   const [units, setUnits] = useState("metric");
   const [weather, setWeather] = useState(null);
   const [baselWeather, setBaselWeather] = useState(null);
   const [moreBaselDetails, setMoreBaselDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(baselWeather);
-  console.log(moreBaselDetails);
-
   useEffect(() => {
-    setBaselQuery(false);
-    const fetchWeather = async () => {
-      setIsLoading(true);
+    if (!query.q == "" || (query.lat && query.lon)) {
+      setBaselQuery(false);
+      const fetchWeather = async () => {
+        setIsLoading(true);
 
-      await getFormattedWeatherData({ ...query, ...units })
-        .then((data) => {
-          setWeather(data);
-        })
-        .then(() => setBaselWeather(null));
-      setIsLoading(false);
-    };
+        await getFormattedWeatherData({ ...query, ...units })
+          .then((data) => {
+            setWeather(data);
+          })
+          .then(() => setBaselWeather(null));
+        setIsLoading(false);
+      };
 
-    fetchWeather();
-  }, [query, units]);
+      fetchWeather();
+    }
+  }, [query]);
 
   useEffect(() => {
     if (baselQuery) {
@@ -71,12 +71,19 @@ const App = () => {
   };
   return (
     <div
-      className={`mx-auto max-w-screen-md mt-12 py-10 px-28 bg-gradient-to-br from-cyan-700 to-blue-700 h-fit shadow-xl shadow-gray-400 ${formatBackground()}`}
+      className={`  mx-auto max-w-screen-md mt-12 py-10 px-28 bg-gradient-to-br from-cyan-700 to-blue-700 h-fit shadow-xl shadow-gray-400 ${formatBackground()}`}
     >
       <TopButtons setQuery={setQuery} setBaselQuery={setBaselQuery} />
-      <Inputs setQuery={setQuery} units={units} setUnits={setUnits} />
+      <Inputs
+        setQuery={setQuery}
+        units={units}
+        setUnits={setUnits}
+        setBaselQuery={setBaselQuery}
+      />
       {isLoading ? (
-        <p>Loading...</p>
+        <div>
+          <Loader />
+        </div>
       ) : (
         <>
           {weather && (
