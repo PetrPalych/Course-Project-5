@@ -3,7 +3,7 @@ import { format } from "date-fns";
 
 const API_KEY = "25f851fcd1ea106d2cf5b44c87143287";
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
-const BASEL_BASE_URL = "";
+const BASEL_BASE_URL = "http://127.0.0.1:8000/api/v1/temperature";
 
 const getWeatherData = (infoType, searchParams) => {
   const url = new URL(BASE_URL + "/" + infoType);
@@ -109,18 +109,54 @@ const getCurrentDate = () => {
   return formattedDate;
 };
 
-const fetchBaselData = (cuurentDate) => {
+const fetchBaselWeather = async () => {
+  const dailyAndHourly = await fetchBaselForecastData();
+  const temperatureAndDetails = await fetchBaselTemperatureData();
+  const weather = {
+    temperatureAndDetails,
+    dailyForecast: dailyAndHourly[0],
+    hourlyForecast: dailyAndHourly[1],
+  };
+
+  return weather;
+};
+
+const fetchBaselTemperatureData = async () => {
+  const currentDate = getCurrentDate();
   try {
-    const api = `?/${cuurentDate}`;
-    console.log(api);
-    // const response = fetch(BASEL_BASE_URL + "?/" + cuurentDate, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    // });
-    // const result = response.json();
-    // return result;
+    const response = await fetch(BASEL_BASE_URL + "/" + currentDate, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    const result = response.json();
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const fetchBaselForecastData = async () => {
+  try {
+    const responseHourly = await fetch(BASEL_BASE_URL + "/hourly-forecast", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    const hourlyForecast = await responseHourly.json();
+
+    const responseDaily = await fetch(BASEL_BASE_URL + "/daily-forecast", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    const dailyForecast = await responseDaily.json();
+
+    return [dailyForecast, hourlyForecast];
   } catch (error) {
     console.log(error);
   }
@@ -133,5 +169,5 @@ export {
   iconUrlFromCode,
   kelvinToCelsius,
   getCurrentDate,
-  fetchBaselData,
+  fetchBaselWeather,
 };
