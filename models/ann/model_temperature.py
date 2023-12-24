@@ -1,4 +1,5 @@
 import os
+import pytz
 
 import pandas as pd
 import joblib
@@ -32,7 +33,9 @@ model_wind_speed = load_model(keras_wind_speed_file_path)
 
 
 def predict_weather(forecast_type: ForecastType) -> list[HourlyForecast] | list[DailyForecast]:
-    current_date_time = datetime.now()
+    basel_timezone = pytz.timezone('Europe/Zurich')
+
+    current_date_time = datetime.now(basel_timezone)
 
     year = current_date_time.year
     month = current_date_time.month
@@ -77,7 +80,7 @@ def predict_weather(forecast_type: ForecastType) -> list[HourlyForecast] | list[
 
         daily_forecast.append(DailyForecast(year=target_hour.year,
                                             month=target_hour.month,
-                                            day=target_hour.day,
+                                            day=target_hour.day + i,
                                             hour=target_hour.hour,
                                             temperature=daily_temperature_prediction))
 
