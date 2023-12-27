@@ -123,7 +123,6 @@ const fetchBaselWeather = async () => {
     dailyForecast: dailyAndHourly[0],
     hourlyForecast: dailyAndHourly[1],
   };
-  console.log(weather);
   return weather;
 };
 
