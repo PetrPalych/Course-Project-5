@@ -71,7 +71,7 @@ const App = () => {
   };
   return (
     <div
-      className={`  mx-auto max-w-screen-md mt-12 py-10 px-28 bg-gradient-to-br from-cyan-700 to-blue-700 h-fit shadow-xl shadow-gray-400 ${formatBackground()}`}
+      className={`mx-auto max-w-screen-md mt-12 py-10 px-28 bg-gradient-to-br from-cyan-700 to-blue-700 h-fit shadow-xl shadow-gray-400 rounded-lg ${formatBackground()}`}
     >
       <TopButtons setQuery={setQuery} setBaselQuery={setBaselQuery} />
       <Inputs

@@ -103,8 +103,15 @@ const kelvinToCelsius = (kelvin) => {
 };
 
 const getCurrentDate = () => {
-  const now = new Date();
-  const formattedDate = format(now, "yyyy/MM/dd/HH");
+  const baselTime = new Date();
+  const options = {
+    hour12: false,
+    timeZone: "Europe/Zurich",
+  };
+
+  const formattedTime = baselTime.toLocaleString("en-US", options);
+  const formattedDate = format(formattedTime, "yyyy/MM/dd/HH");
+
   return formattedDate;
 };
 
@@ -116,14 +123,14 @@ const fetchBaselWeather = async () => {
     dailyForecast: dailyAndHourly[0],
     hourlyForecast: dailyAndHourly[1],
   };
-
+  console.log(weather);
   return weather;
 };
 
 const fetchBaselTemperatureData = async () => {
   const currentDate = getCurrentDate();
   try {
-    const response = await fetch(BASEL_BASE_URL + "/" + currentDate, {
+    const response = await fetch(BASEL_BASE_URL + "/get-temperature", {
       method: "GET",
       headers: {
         "Content-type": "application/json",
