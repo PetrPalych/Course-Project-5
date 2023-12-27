@@ -7,7 +7,7 @@ import joblib
 from keras.models import load_model
 from datetime import datetime, timedelta
 
-from api_v1.temperature.schemas import HourlyForecast, DailyForecast
+from api_v1.temperature.schemas import CurrentForecast, HourlyForecast, DailyForecast
 from core.models.enums import ForecastType
 
 current_dir = os.path.dirname(__file__)
@@ -213,3 +213,43 @@ def predict_wind_speed_next_hour(current_hour_data, last_5_hours_data, last_5_da
 
     prediction = model_wind_speed.predict(middle_point_scaled)
     return prediction
+
+def predict_current_hour_weather() -> CurrentForecast:
+    basel_timezone = pytz.timezone('Europe/Zurich')
+
+    current_date_time = datetime.now(basel_timezone)
+    year, month, day, hour = (current_date_time.year, current_date_time.month, current_date_time.day,
+                              current_date_time.hour)
+
+    current_hour_data = get_current_hour_data(year, month, day, hour)
+    last_5_hours_data = get_last_5_hours_data(year, month, day, hour)
+    last_5_days_data = get_last_5_days_data(year, month, day, hour)
+
+    relative_humidity_prediction = predict_relative_humidity_next_hour(current_hour_data, last_5_hours_data,
+                                                                       last_5_days_data)
+    wind_speed_prediction = predict_wind_speed_next_hour(current_hour_data, last_5_hours_data, last_5_days_data)
+
+    temperature_prediction = []
+    for i in range(24):
+        target_hour = current_date_time + timedelta(hours=i)
+
+        hourly_weather_variations = get_last_5_hours_data(target_hour.year, target_hour.month, target_hour.day,
+                                                          target_hour.hour)
+
+        hourly_temperature_prediction = predict_temperature_next_hour(current_hour_data, hourly_weather_variations)
+
+        temperature_prediction.append(hourly_temperature_prediction)
+
+    current_hour_forecast = CurrentForecast(
+        year=year,
+        month=month,
+        day=day,
+        hour=hour,
+        temperature=temperature_prediction[0],
+        relative_humidity=relative_humidity_prediction,
+        wind_speed=wind_speed_prediction,
+        low=min(temperature_prediction),
+        high=max(temperature_prediction)
+    )
+
+    return current_hour_forecast
