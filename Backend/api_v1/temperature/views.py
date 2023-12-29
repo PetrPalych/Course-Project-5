@@ -3,25 +3,20 @@ from typing import Annotated
 from fastapi import APIRouter, Path
 
 from . import crud
-from .schemas import HourlyForecast, DailyForecast
+from .schemas import CurrentForecast, HourlyForecast, DailyForecast
 
 router = APIRouter(tags=["Weather Forecast"])
 
 
 @router.get(
-    path="/{year}/{month}/{day}/{hour}",
-    response_model=HourlyForecast,
+    path="/get-temperature",
+    response_model=CurrentForecast,
     summary="Get forecasts the weather for a specific date",
     description="Retrieve the weather forecast for a specific date and hour. "
                 "Provide the year, month, day, and hour as path parameters to get the detailed hourly forecast data.",
 )
-async def get_specific_weather_forecast(
-    year: Annotated[int, Path],
-    month: Annotated[int, Path],
-    day: Annotated[int, Path],
-    hour: Annotated[int, Path]
-) -> HourlyForecast:
-    prediction = await crud.get_current_forecast(year=year, month=month, day=day, hour=hour)
+async def get_specific_weather_forecast() -> CurrentForecast:
+    prediction = await crud.get_current_forecast()
     return prediction
 
 

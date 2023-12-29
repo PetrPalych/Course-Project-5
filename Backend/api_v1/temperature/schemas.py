@@ -17,3 +17,7 @@ class HourlyForecast(ForecastBase):
 
 class DailyForecast(ForecastBase):
     model_config = ConfigDict(from_attributes=True)
+
+class CurrentForecast(HourlyForecast):
+    low: float
+    high: float

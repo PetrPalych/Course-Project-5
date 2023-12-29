@@ -20,7 +20,6 @@ const App = () => {
   const [units, setUnits] = useState("metric");
   const [weather, setWeather] = useState(null);
   const [baselWeather, setBaselWeather] = useState(null);
-  const [moreBaselDetails, setMoreBaselDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -63,15 +62,15 @@ const App = () => {
   }, [baselQuery]);
 
   const formatBackground = () => {
-    if (!weather) return "from-cyan-700 to-blue-700";
+    if (!weather) return "from-cyan-500 to-blue-500";
     const threshold = units === "metric" ? 20 : 60;
     if (kelvinToCelsius(weather.temp) < threshold)
-      return "from-cyan-700 to-blue-700";
-    return "from-yellow-700 to-orange-700";
+      return "from-cyan-500 to-blue-600";
+    return "from-yellow-500 to-orange-500";
   };
   return (
     <div
-      className={`  mx-auto max-w-screen-md mt-12 py-10 px-28 bg-gradient-to-br from-cyan-700 to-blue-700 h-fit shadow-xl shadow-gray-400 ${formatBackground()}`}
+      className={`mx-auto max-w-screen-md mt-12 py-10 px-28 bg-gradient-to-br  h-fit shadow-xl shadow-gray-400 rounded-lg ${formatBackground()}`}
     >
       <TopButtons setQuery={setQuery} setBaselQuery={setBaselQuery} />
       <Inputs
