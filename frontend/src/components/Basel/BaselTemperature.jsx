@@ -16,7 +16,8 @@ import {
 const BaselTemperature = ({ baselWeather }) => {
   const moreDetails = baselWeather.moreDetails;
   const temperatureAndDetails = baselWeather.temperatureAndDetails;
-  const { relative_humidity, wind_speed, temperature } = temperatureAndDetails;
+  const { relative_humidity, wind_speed, temperature, low, high } =
+    temperatureAndDetails;
   const {
     details,
     icon,
@@ -40,7 +41,7 @@ const BaselTemperature = ({ baselWeather }) => {
             <UilTemperature size={18} className="mr-1" />
             Real fell:
             <span className="font-meduim ml-1">{`${kelvinToCelsius(
-              feels_like
+              feels_like + 3
             ).toFixed()}°`}</span>
           </div>
           <div className="flex font-light text-sm items-center justify-center">
@@ -75,18 +76,12 @@ const BaselTemperature = ({ baselWeather }) => {
         <p className="font-light">|</p>
         <UilSun />
         <p className="font-light">
-          High:{" "}
-          <span className="font-medium ml-1">{`${kelvinToCelsius(
-            temp_max
-          ).toFixed()}°`}</span>
+          High: <span className="font-medium ml-1">{`${high.toFixed()}°`}</span>
         </p>
         <p className="font-light">|</p>
         <UilSun />
         <p className="font-light">
-          Low:{" "}
-          <span className="font-medium ml-1">{`${kelvinToCelsius(
-            temp_min
-          ).toFixed()}°`}</span>
+          Low: <span className="font-medium ml-1">{`${Math.floor(low)}°`}</span>
         </p>
       </div>
     </div>
